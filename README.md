@@ -39,3 +39,6 @@ register_nav_menu('main-menu', 'Main menu');
 - On the _CSS Classes_ field add any of the following alignment classes: 'dropdown-menu-start', 'dropdown-menu-end', 'dropdown-menu-sm-start', 'dropdown-menu-sm-end', 'dropdown-menu-md-start', 'dropdown-menu-md-end', 'dropdown-menu-lg-start', 'dropdown-menu-lg-end', 'dropdown-menu-xl-start', 'dropdown-menu-xl-end', 'dropdown-menu-xxl-start', 'dropdown-menu-xxl-end';
 - If any of the mentioned above class is detected, then they will automatically copied into the _ul.dropdown-menu_ element following the Bootstrap 5 structure;
 - Any other class that is not related to the dropdown menu alignment will stay where it is.
+
+![image](https://user-images.githubusercontent.com/30770557/178092627-91d7ffd8-c97e-4333-bf80-f004ed6677d5.png)
+
