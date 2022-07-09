@@ -18,19 +18,26 @@ class bootstrap_5_wp_nav_menu_walker extends Walker_Nav_menu
     'dropdown-menu-xxl-end'
   ];
 
+  /**
+   * Start Level
+   */
   function start_lvl(&$output, $depth = 0, $args = null)
   {
     $dropdown_menu_class[] = '';
-    foreach($this->current_item->classes as $class) {
-      if(in_array($class, $this->dropdown_menu_alignment_values)) {
+    foreach ($this->current_item->classes as $class) {
+      if (in_array($class, $this->dropdown_menu_alignment_values)) {
         $dropdown_menu_class[] = $class;
       }
-    }
+    } 
     $indent = str_repeat("\t", $depth);
-    $submenu = ($depth > 0) ? ' sub-menu' : '';
-    $output .= "\n$indent<ul class=\"dropdown-menu$submenu " . esc_attr(implode(" ",$dropdown_menu_class)) . " depth_$depth\">\n";
+    // Mrinmay changed sub-menu  for dropdown-submenu
+    $submenu = ($depth > 0) ? ' dropdown-submenu' : '';
+    $output .= "\n$indent<ul class=\"dropdown-menu$submenu " . esc_attr(implode(" ", $dropdown_menu_class)) . " depth_$depth\">\n";
   }
 
+  /**
+   * Start Element
+   */
   function start_el(&$output, $item, $depth = 0, $args = null, $id = 0)
   {
     $this->current_item = $item;
@@ -45,8 +52,9 @@ class bootstrap_5_wp_nav_menu_walker extends Walker_Nav_menu
     $classes[] = ($args->walker->has_children) ? 'dropdown' : '';
     $classes[] = 'nav-item';
     $classes[] = 'nav-item-' . $item->ID;
+    // Mrinmay added dropdown-menu-child-item & at_depth classes
     if ($depth && $args->walker->has_children) {
-      $classes[] = 'dropdown-menu dropdown-menu-end';
+      $classes[] = 'dropdown-menu-child-item dropdown-menu-end at_depth_'.$depth;
     }
 
     $class_names =  join(' ', apply_filters('nav_menu_css_class', array_filter($classes), $item, $args));
@@ -57,14 +65,21 @@ class bootstrap_5_wp_nav_menu_walker extends Walker_Nav_menu
 
     $output .= $indent . '<li ' . $id . $value . $class_names . $li_attributes . '>';
 
-    $attributes = !empty($item->attr_title) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
+    $attributes  = !empty($item->attr_title) ? ' title="' . esc_attr($item->attr_title) . '"' : '';
     $attributes .= !empty($item->target) ? ' target="' . esc_attr($item->target) . '"' : '';
     $attributes .= !empty($item->xfn) ? ' rel="' . esc_attr($item->xfn) . '"' : '';
     $attributes .= !empty($item->url) ? ' href="' . esc_attr($item->url) . '"' : '';
 
-    $active_class = ($item->current || $item->current_item_ancestor || in_array("current_page_parent", $item->classes, true) || in_array("current-post-ancestor", $item->classes, true)) ? 'active' : '';
-    $nav_link_class = ( $depth > 0 ) ? 'dropdown-item ' : 'nav-link ';
-    $attributes .= ( $args->walker->has_children ) ? ' class="'. $nav_link_class . $active_class . ' dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"' : ' class="'. $nav_link_class . $active_class . '"';
+    $active_class   = ($item->current || $item->current_item_ancestor || in_array("current_page_parent", $item->classes, true) || in_array("current-post-ancestor", $item->classes, true)) ? 'active' : '';
+    $nav_link_class = ($depth > 0) ? 'dropdown-item ' : 'nav-link ';
+
+    if ($args->walker->has_children) {
+        // Mrinmay added data-bs-auto-close
+        $attributes .=  ' class="' . $nav_link_class . $active_class . ' dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" data-bs-auto-close="outside" aria-expanded="false"';
+    }
+    else {
+        $attributes .=  ' class="' . $nav_link_class . $active_class . '"';
+    }
 
     $item_output = $args->before;
     $item_output .= '<a' . $attributes . '>';
@@ -74,6 +89,7 @@ class bootstrap_5_wp_nav_menu_walker extends Walker_Nav_menu
 
     $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
   }
+
 }
 // register a new menu
-register_nav_menu('main-menu', 'Main menu');
+register_nav_menu('Header Menu', 'header-menu');
